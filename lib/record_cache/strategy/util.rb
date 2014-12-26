@@ -45,7 +45,11 @@ module RecordCache
               records.select! do |record|
                 attribute_value = record.send(attr)
                 attribute_value = attribute_value.downcase if attribute_value.respond_to?(:downcase)
-                attribute_value == where_value
+                if [Fixnum, String].to_set == [attribute_value, where_value].map(&:class).to_set
+                  attribute_value.to_s == where_value.to_s
+                else
+                  attribute_value == where_value
+                end
               end
             end
           end
